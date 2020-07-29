@@ -1,0 +1,21 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t no7wataru/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true no7wataru/react-test npm test
+
+after_success:
+  - docker build -t no7wataru/multi-client ./client
+  - docker build -t no7wataru/multi-nginx ./nginx
+  - docker build -t no7wataru/multi-server ./server
+  - docker build -t no7wataru/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push no7wataru/multi-client
+  - docker push no7wataru/multi-nginx 
+  - docker push no7wataru/multi-server
+  - docker push no7wataru/multi-worker
