@@ -19,3 +19,16 @@ after_success:
   - docker push no7wataru/multi-nginx 
   - docker push no7wataru/multi-server
   - docker push no7wataru/multi-worker
+
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: ap-northeast-1
+  app: yoshioka-multi-docker
+  env: YoshiokaMultiDocker-env
+  bucket_name: elasticbeanstalk-ap-northeast-1-484882468786
+  bucket_path: yoshioka-docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
